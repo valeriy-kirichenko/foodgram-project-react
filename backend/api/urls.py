@@ -15,6 +15,6 @@ from django.urls import include, path
 # router_v1.register(r'follow', FollowViewSet, basename='follow')
 
 urlpatterns = [
-    path('', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
+    path('v1/', include('djoser.urls')),
+    path('v1/auth/', include('djoser.urls.authtoken')),
 ]
