@@ -22,10 +22,10 @@ class User(AbstractUser):
         help_text='Введите электронную почту'
     )
     first_name = models.CharField(
-        'Имя', max_length=150, blank=True, help_text='Введите имя'
+        'Имя', max_length=150, help_text='Введите имя'
     )
     last_name = models.CharField(
-        'Фамилия', max_length=150, blank=True, help_text='Введите фамилию'
+        'Фамилия', max_length=150, help_text='Введите фамилию'
     )
 
     class Meta:
@@ -64,10 +64,6 @@ class Subscribe(models.Model):
     def clean(self):
         if self.user == self.author:
             raise ValidationError('Вы не можете подписаться на самого себя')
-        if self.author.following.count() > 0:
-            raise ValidationError(
-                'Нельзя подписаться на автора более одного раза'
-            )
 
     def save(self, *args, **kwargs):
         self.full_clean()

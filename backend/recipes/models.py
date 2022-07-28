@@ -16,13 +16,11 @@ class RecipesIngredients(models.Model):
         related_name='recipe_ingredients',
         verbose_name='Ингредиенты'
     )
-    amount = models.IntegerField(
+    amount = models.PositiveSmallIntegerField(
         'Количество',
         default=1,
         help_text='Введите количество',
-        validators=(MinValueValidator(1),),
-        null=False,
-        blank=True
+        validators=(MinValueValidator(1),)
     )
 
     class Meta:
@@ -36,20 +34,12 @@ class RecipesIngredients(models.Model):
         verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
-        return (f'{self.ingredient.name}: {self.ingredient.amount},'
+        return (f'{self.ingredient.name}: {self.amount},'
                 f' {self.ingredient.measurement_unit}')
 
 
 class Ingredient(models.Model):
     name = models.CharField('Название', max_length=200,)
-    amount = models.IntegerField(
-        'Количество',
-        default=1,
-        help_text='Введите количество',
-        validators=(MinValueValidator(1),),
-        null=False,
-        blank=True
-    )
     measurement_unit = models.CharField('Единица измерения',  max_length=200,)
 
     class Meta:
@@ -133,7 +123,7 @@ class Recipe(models.Model):
     )
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('-pub_date',)
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -156,6 +146,12 @@ class ShopingCart(models.Model):
     )
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('recipe', 'user'),
+                name='shoping_cart_unique'
+            ),
+        ]
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
 
@@ -178,7 +174,7 @@ class Favorite(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=('recipe', 'user'),
-                name='recipe_unique'
+                name='favorite_unique'
             ),
         ]
         verbose_name = 'Избранное'
