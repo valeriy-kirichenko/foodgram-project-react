@@ -4,7 +4,7 @@ from django.db import models
 from users.models import User
 
 
-class RecipesIngredients(models.Model):
+class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         'Recipe',
         on_delete=models.CASCADE,
@@ -94,7 +94,7 @@ class Recipe(models.Model):
         help_text='Опишите здесь свой рецепт'
     )
     image = models.ImageField('Картинка', upload_to='recipes/')
-    cooking_time = models.IntegerField(
+    cooking_time = models.PositiveSmallIntegerField(
         'Время готовки',
         help_text='Введите время готовки',
         validators=(MinValueValidator(1),)
@@ -107,7 +107,7 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         verbose_name='Ингредиент',
-        through='RecipesIngredients',
+        through='RecipeIngredient',
         related_name='recipes',
     )
     tags = models.ManyToManyField(
@@ -131,17 +131,17 @@ class Recipe(models.Model):
         return self.name
 
 
-class ShopingCart(models.Model):
+class ShoppingCart(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='shopingcart',
+        related_name='shopping_cart',
         verbose_name='Пользователь'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='shopingcart',
+        related_name='shopping_cart',
         verbose_name='Рецепт'
     )
 
