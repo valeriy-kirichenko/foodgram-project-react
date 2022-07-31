@@ -3,12 +3,12 @@ from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
+from .utils import (INGREDIENTS, RECIPES_LIMIT, TAGS,
+                    create_recipe_ingredient_objects,
+                    tags_ingredients_validation)
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Tag)
-from .utils import RECIPE_EXISTS_MESSAGE, create_recipe_ingredient_objects
 from users.models import Subscribe, User
-
-RECIPES_LIMIT = 3
 
 
 class CustomUserSerialaizer(UserSerializer):
@@ -159,17 +159,8 @@ class RecipeCreateSerialaizer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        request = self.context['request']
-        if request.method == 'POST':
-            recipe = Recipe.objects.filter(
-                author=request.user,
-                name=data['name'],
-                text=data['text'],
-                cooking_time=data['cooking_time']
-            )
-            if recipe:
-                raise serializers.ValidationError(RECIPE_EXISTS_MESSAGE)
-            return data
+        tags_ingredients_validation(data, INGREDIENTS)
+        tags_ingredients_validation(data, TAGS)
         return data
 
     def create(self, validated_data):
