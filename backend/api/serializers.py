@@ -1,14 +1,14 @@
 from django.db.models import F
 from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
+from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingCart, Tag)
 from rest_framework import serializers
+from users.models import Subscribe, User
 
 from .utils import (INGREDIENTS, RECIPES_LIMIT, TAGS,
                     create_recipe_ingredient_objects,
                     tags_ingredients_validation)
-from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
-                            ShoppingCart, Tag)
-from users.models import Subscribe, User
 
 
 class CustomUserSerialaizer(UserSerializer):
@@ -134,13 +134,12 @@ class RecipeReadSerialaizer(serializers.ModelSerializer):
         ).exists()
 
     def get_ingredients(self, obj):
-        ingredients = obj.ingredients.values(
+        return obj.ingredients.values(
             'id',
             'name',
             'measurement_unit',
             amount=F('recipe_ingredients__amount')
         )
-        return ingredients
 
 
 class RecipeCreateSerialaizer(serializers.ModelSerializer):

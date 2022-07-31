@@ -1,6 +1,5 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-
 from users.models import User
 
 
@@ -39,8 +38,8 @@ class RecipeIngredient(models.Model):
 
 
 class Ingredient(models.Model):
-    name = models.CharField('Название', max_length=200,)
-    measurement_unit = models.CharField('Единица измерения',  max_length=200,)
+    name = models.CharField('Название', max_length=200)
+    measurement_unit = models.CharField('Единица измерения', max_length=200)
 
     class Meta:
         ordering = ('name',)
