@@ -10,7 +10,7 @@ services:
 
   web:
     build:
-      context: ../backend
+      image: valeriykirichenko/foodgram:1.0
     restart: always
     volumes:
       - backend_static:/app/static/
@@ -22,8 +22,7 @@ services:
 
   frontend:
     build:
-      context: ../frontend
-      dockerfile: Dockerfile
+      image: valeriykirichenko/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
   nginx:
