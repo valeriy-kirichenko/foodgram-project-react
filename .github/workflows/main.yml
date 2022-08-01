@@ -44,13 +44,13 @@ jobs:
         uses: docker/build-push-action@v2 
         with:
           push: true
-          context: ./backend
+          context: ../backend
           tags: ${{ secrets.DOCKER_USERNAME }}/foodgram:1.0
       - name: Push frontend to Docker Hub
         uses: docker/build-push-action@v2
         with:
           push: true
-          context: ./frontend
+          context: ../frontend
           tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-frontend:latest
       
   deploy:
