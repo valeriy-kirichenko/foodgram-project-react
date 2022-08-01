@@ -23,12 +23,12 @@ class RecipeIngredient(models.Model):
     )
 
     class Meta:
-        # constraints = [
-        #     models.UniqueConstraint(
-        #         fields=('recipe', 'ingredient'),
-        #         name='recipe_ingredient_unique'
-        #     ),
-        # ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=('recipe', 'ingredient'),
+                name='recipe_ingredient_unique'
+            ),
+        ]
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
 
