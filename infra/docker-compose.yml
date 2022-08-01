@@ -6,7 +6,6 @@ services:
       - db:/var/lib/postgresql/data/
     env_file:
       - ./.env
-  # Примеры наполнения файла .env представлены в README и .env.template
 
   web:
     build:
@@ -25,6 +24,7 @@ services:
       image: valeriykirichenko/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
+
   nginx:
     image: nginx:1.19.3
     ports:

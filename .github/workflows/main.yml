@@ -25,22 +25,6 @@ jobs:
       run: |
         python -m flake8 backend/
 
-  # copy_infra_to_server:
-  #   name: Copy docker-compose.yml and nginx.conf
-  #   runs-on: ubuntu-latest
-  #   needs: tests
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Copy files
-  #     uses: garygrossgarten/github-action-scp@release
-  #     with:
-  #         local: infra/
-  #         remote: /home/${{ secrets.USER }}/infra/
-  #         host: ${{ secrets.HOST }}
-  #         username: ${{ secrets.USER }}
-  #         privateKey: ${{ secrets.SSH_KEY }}
-  #         passphrase: ${{ secrets.PASSPHRASE }}
-
   build_and_push_to_docker_hub:
     if: github.ref == 'refs/heads/master'
     name: Push Docker image to Docker Hub
@@ -82,7 +66,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            cd infra/
             sudo docker-compose stop
             sudo docker-compose rm -f web
             touch .env 
