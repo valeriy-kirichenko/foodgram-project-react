@@ -160,7 +160,7 @@ class RecipeCreateSerialaizer(serializers.ModelSerializer):
     def validate(self, data):
         tags_ingredients_validation(data, INGREDIENTS)
         tags_ingredients_validation(data, TAGS)
-        return data
+        return super().validate(data)
 
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')

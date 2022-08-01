@@ -78,10 +78,20 @@ def create_recipe_ingredient_objects(recipe, ingredients):
 
 def tags_ingredients_validation(data, element):
     elements = data[element]
-    duplicate_objects = [
-        obj for obj in elements
-        if elements.count(obj) > 1
-    ]
+    if element == INGREDIENTS:
+        ingredients = [
+            get_object_or_404(Ingredient, id=ingredient['id']).name
+            for ingredient in elements
+        ]
+        duplicate_objects = [
+            ingredient for ingredient in ingredients
+            if ingredients.count(ingredient) > 1
+        ]
+    else:
+        duplicate_objects = [
+            tag for tag in elements
+            if elements.count(tag) > 1
+        ]
     length = len(duplicate_objects)
     plural_ending = PLURAL_INGREDIENT if element == INGREDIENTS else PLURAL_TAG
     if duplicate_objects:
@@ -92,10 +102,7 @@ def tags_ingredients_validation(data, element):
                 element=INGREDIENT_RU if element == INGREDIENTS else TAG_RU,
                 ending=plural_ending if length > 2 else SINGULAR,
                 elements=", ".join(
-                    set(
-                        [get_object_or_404(Ingredient, id=ingredient['id'])
-                         .name for ingredient in duplicate_objects]
-                    )
+                    set([ingredient for ingredient in duplicate_objects])
                 ) if element == INGREDIENTS
                 else ", ".join(set([tag.name for tag in duplicate_objects])),
                 must=PLURAL_MUST if length > 2 else SINGULAR_MUST
