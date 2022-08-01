@@ -1,10 +1,10 @@
-<!-- ![example workflow](https://github.com/valeriy-kirichenko/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg) -->
+![example workflow](https://github.com/valeriy-kirichenko/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 # Foodgram, «Продуктовый помощник» :hamburger:
 Описание проекта
 ----------
 На этом сервисе пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
 
-<!-- [Развернутый проект](http://51.250.17.23/api/v1/) -->
+Развернутый проект доступен по [ссылке](http://51.250.23.244/recipes)
 ----------
 
 # Установка
