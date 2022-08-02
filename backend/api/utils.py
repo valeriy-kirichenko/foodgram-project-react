@@ -93,6 +93,8 @@ def tags_ingredients_validation(data, element):
             ingredient for ingredient in ingredients
             if ingredients.count(ingredient) > 1
         ]
+        if negative_amount:
+            raise ValidationError(NEGATIVE_AMOUNT_MESSAGE)
     else:
         duplicate_objects = [
             tag for tag in elements
@@ -114,5 +116,3 @@ def tags_ingredients_validation(data, element):
                 must=PLURAL_MUST if length > 2 else SINGULAR_MUST
             )
         )
-    if negative_amount:
-        raise ValidationError(NEGATIVE_AMOUNT_MESSAGE)
