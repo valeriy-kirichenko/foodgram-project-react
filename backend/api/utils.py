@@ -22,6 +22,8 @@ DUPLICATE_MESSAGE = (
     '{element_plural} не должны дублироваться. {element}{ending} '
     '({elements}) {must} быть в единственном числе.'
 )
+NEGATIVE_AMOUNT_MESSAGE = ('Количество ингредиента не может быть '
+                           'отрицательным или равно нулю.')
 INGREDIENTS = 'ingredients'
 INGREDIENT_RU = 'Ингредиент'
 INGREDIENTS_RU = 'Ингредиенты'
@@ -83,6 +85,10 @@ def tags_ingredients_validation(data, element):
             get_object_or_404(Ingredient, id=ingredient['id']).name
             for ingredient in elements
         ]
+        negative_amount = [
+            ingredient['amount'] for ingredient in elements
+            if ingredient['amount'] <= 0
+        ]
         duplicate_objects = [
             ingredient for ingredient in ingredients
             if ingredients.count(ingredient) > 1
@@ -108,3 +114,5 @@ def tags_ingredients_validation(data, element):
                 must=PLURAL_MUST if length > 2 else SINGULAR_MUST
             )
         )
+    if negative_amount:
+        raise ValidationError(NEGATIVE_AMOUNT_MESSAGE)

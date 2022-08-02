@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from users.models import Subscribe, User
 
 from .filters import IngredientSearchFilter, RecipeFilter
+from .paginators import CustomPageNumberPagination
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from .serializers import (CustomUserSerialaizer, FavoriteSerializer,
                           IngredientSerializer, RecipeCreateSerialaizer,
@@ -27,6 +28,7 @@ from .utils import (FAVORITE_EXISTS_MESSAGE, FAVORITE_MISSING_MESSAGE,
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = (IsAuthorOrReadOnly,)
+    pagination_class = CustomPageNumberPagination
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filterset_class = RecipeFilter
     ordering_fields = ('pub_date',)
