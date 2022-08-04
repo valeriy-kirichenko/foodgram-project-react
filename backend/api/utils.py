@@ -4,6 +4,7 @@ from recipes.models import Ingredient, Recipe, RecipeIngredient
 from rest_framework import status
 from rest_framework.response import Response
 
+
 FAVORITE_EXISTS_MESSAGE = 'Рецепт уже добавлен в избранное'
 FAVORITE_MISSING_MESSAGE = 'Рецепт отсутствует в избранном'
 SHOPING_CART_EXISTS_MESSAGE = 'Рецепт уже добавлен в список покупок'

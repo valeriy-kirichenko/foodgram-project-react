@@ -71,6 +71,7 @@ jobs:
             sudo docker-compose stop
             sudo docker-compose rm -f web
             sudo docker-compose rm -f frontend
+            sudo docker-compose rm -f nginx
             rm .env
             touch .env 
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env

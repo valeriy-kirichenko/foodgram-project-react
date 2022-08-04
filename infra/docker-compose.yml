@@ -11,7 +11,7 @@ services:
     image: valeriykirichenko/foodgram:1.0
     restart: always
     volumes:
-      - backend_static:/app/static/
+      - backend_static:/app/backend_static/
       - media_value:/app/media/
     depends_on:
       - db
