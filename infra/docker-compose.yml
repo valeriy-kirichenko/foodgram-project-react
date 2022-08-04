@@ -12,7 +12,7 @@ services:
     restart: always
     volumes:
       - backend_static:/app/backend_static/
-      - media_value:/app/media/
+      - media_value:/app/media_value/
     depends_on:
       - db
     env_file:
