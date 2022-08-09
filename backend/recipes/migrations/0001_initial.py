@@ -64,7 +64,6 @@ class Migration(migrations.Migration):
             name='ShopingCart',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('recipe', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='shopingcart', to='recipes.Recipe')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='shopingcart', to=settings.AUTH_USER_MODEL)),
             ],
             options={
