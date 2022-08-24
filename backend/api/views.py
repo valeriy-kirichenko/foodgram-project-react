@@ -71,7 +71,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(methods=('get',), detail=False)
     @permissions([IsAuthenticated])
     def download_shopping_cart(self, request):
-        shoping_cart = {}
+        shopping_cart = {}
         ingredients = RecipeIngredient.objects.filter(
             recipe__shopping_cart__user=request.user
         ).values(
@@ -82,10 +82,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'ingredient_amount'
         )
         for ingredient in ingredients:
-            shoping_cart[ingredient[0]] = (ingredient[1], ingredient[2])
+            shopping_cart[ingredient[0]] = (ingredient[1], ingredient[2])
         shopping_list = '\n'.join(
             [f"- {item}: {value[1]} {value[0]}"
-             for item, value in shoping_cart.items()]
+             for item, value in shopping_cart.items()]
         )
         response = HttpResponse(shopping_list, 'Content-Type: text/plain')
         response['Content-Disposition'] = ('attachment; filename='
@@ -140,7 +140,7 @@ class TagsViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
 
 
-class IngredientsViewSet(viewsets.ModelViewSet):
+class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = None
     queryset = Ingredient.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
