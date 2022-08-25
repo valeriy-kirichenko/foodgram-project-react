@@ -43,6 +43,31 @@ def create_delete_object(
         missing_message,
         delete_from_message
 ):
+    """Добавляет/удаляет рецепт из избранного/списка покупок.
+
+    Args:
+        request (Request): объект запроса.
+        pk (int): id рецепта.\n
+        model_serializer (FavoriteSerializer/ShoppingCartSerializer):
+        сериалайзер.
+        model (Favorite/ShoppingCart): объект избранного/списка покупок.
+        exists_message (str): предупреждение о то м что рецепт уже находится в
+        избранном/списке покупок.
+        missing_message (str): предупреждение о то м что рецепт отсутствует в
+        избранном/списке покупок.
+        delete_from_message (str): сообщение о том откуда удаляется рецепт.
+
+    Returns:
+        Если метод запроса "POST":
+            Response: сериализованные данные если такого рецепта нету в
+            избранном/списке покупок данных иначе сообщение о том что такой
+            рецепта уже присутствует.
+        Иначе:
+            Response: сообщение о том что рецепт удален из избранного/списка
+            покупок иначе сообщение о том что такого рецепта нету в
+            избранном/списке покупок.
+    """
+
     recipe = get_object_or_404(Recipe, id=pk)
     user_id = request.user.id
     serializer = model_serializer(
@@ -69,6 +94,13 @@ def create_delete_object(
 
 
 def create_recipe_ingredient_objects(recipe, ingredients):
+    """Добавляет ингредиенты в рецепт.
+
+    Args:
+        recipe (Recipe): объект рецепта.
+        ingredients (list): список ингредиентов.
+    """
+
     RecipeIngredient.objects.bulk_create(
         RecipeIngredient(
             recipe=recipe,
@@ -79,7 +111,18 @@ def create_recipe_ingredient_objects(recipe, ingredients):
 
 
 def tags_ingredients_validation(data, element):
-    print(data)
+    """Проверяет ингредиенты и теги при создании рецепта.
+
+    Args:
+        data (dict): словарь с входящими данными.
+        element (str): тег или ингредиент.
+
+    Raises:
+        ValidationError: ошибка если указано отрицательное количество
+        ингредиента.
+        ValidationError: ошибка если тег или ингредиент дублируется.
+    """
+
     elements = data[element]
     element_is_ingredient = True if element == INGREDIENTS else False
     if element_is_ingredient:
