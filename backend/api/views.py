@@ -26,6 +26,8 @@ from .utils import (FAVORITE_EXISTS_MESSAGE, FAVORITE_MISSING_MESSAGE,
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    """ViewSet для работы с рецептами."""
+
     queryset = Recipe.objects.all()
     permission_classes = (IsAuthorOrReadOnly,)
     pagination_class = CustomPageNumberPagination
@@ -35,16 +37,49 @@ class RecipeViewSet(viewsets.ModelViewSet):
     ordering = ('-pub_date',)
 
     def get_serializer_class(self):
+        """Возвращает класс сериализатора.
+
+        Returns:
+            Если метод запроса "GET":
+                RecipeReadSerialaizer: класс сериализатора для вывода списка
+                рецептов.
+            Иначе:
+                RecipeCreateSerialaizer: класс сериализатора для создания
+                рецепта.
+        """
         if self.request.method == 'GET':
             return RecipeReadSerialaizer
         return RecipeCreateSerialaizer
 
     def perform_create(self, serializer):
+        """Сохраняет текущего пользователя в качестве автора при создании
+        рецепта.
+
+        Args:
+            serializer (RecipeCreateSerialaizer): объект сериализатора для
+            создания рецепта.
+        """
         serializer.save(author=self.request.user)
 
     @action(methods=('post', 'delete'), detail=True)
     @permissions([IsAuthenticated])
     def favorite(self, request, pk=None):
+        """Добавляет/удаляет рецепт из избранного.
+
+        Args:
+            request (Request): объект запроса.
+            pk (int, опционально): id рецепта. По умолчанию None.
+
+        Returns:
+            Если метод запроса "POST":
+                Response: сериализованные данные если такого рецепта нету в
+                избранном иначе сообщение о том что такой рецепта уже
+                присутствует.
+            Иначе:
+                Response: сообщение о том что рецепт удален из избранного иначе
+                сообщение о том что такого рецепта нету в избранном.
+        """
+
         return create_delete_object(
             request,
             pk,
@@ -58,6 +93,22 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(methods=('post', 'delete'), detail=True)
     @permissions([IsAuthenticated])
     def shopping_cart(self, request, pk=None):
+        """Добавляет/удаляет рецепт из списка покупок.
+
+        Args:
+            request (Request): объект запроса.
+            pk (int, опционально): id рецепта. По умолчанию None.
+
+        Returns:
+            Если метод запроса "POST":
+                Response: сериализованные данные если такого рецепта нету в
+                списке покупок иначе сообщение о том что такой рецепт уже
+                присутствует.
+            Иначе:
+                Response: сообщение о том что рецепт удален из списка покупок
+                иначе сообщение о том что такого рецепта нету в списке покупок.
+        """
+
         return create_delete_object(
             request,
             pk,
@@ -71,7 +122,19 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(methods=('get',), detail=False)
     @permissions([IsAuthenticated])
     def download_shopping_cart(self, request):
+        """Скачивает текстовый файл с ингридиентами из списка покупок.
+
+        Args:
+            request (Request): объект запроса.
+
+        Returns:
+            HttpResponse: объект ответа.
+        """
         shopping_cart = {}
+        # Фильтруем объекты RecipeIngredient по текущему пользователю,
+        # достаем поля ингредиента(только 'name' и 'measurement_unit')
+        # и суммируем в поле ingredient_amount количество каждого ингредиента
+        # затем создаем кортеж со значениями этих полей.
         ingredients = RecipeIngredient.objects.filter(
             recipe__shopping_cart__user=request.user
         ).values(
@@ -94,12 +157,23 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 
 class CustomUserViewSet(UserViewSet):
+    """ViewSet для работы с пользователями."""
+
     queryset = User.objects.all()
     serializer_class = CustomUserSerialaizer
 
     @action(methods=('get',), detail=False)
     @permissions([IsAuthenticated])
     def subscriptions(self, request):
+        """Выводит список подписок.
+
+        Args:
+            request (Request): объект запроса.
+
+        Returns:
+            Разбитый на страницы список подписок если их количество больше
+            установленного в настройках пагинатора.
+        """
         queryset = User.objects.filter(following__user=request.user)
         page = self.paginate_queryset(queryset)
         serializer = SubscriptionsSerializer(
@@ -114,6 +188,21 @@ class CustomUserViewSet(UserViewSet):
     @action(methods=('post', 'delete'), detail=True)
     @permissions([IsAuthenticated])
     def subscribe(self, request, id=None):
+        """Подписывает/отписывает пользователя от автора.
+
+        Args:
+            request (Request): объект запроса.
+            id (int, optional): id автора. По умолчанию None.
+
+        Returns:
+            Если метод запроса "POST":
+                Response: при успешной попытке подписки выводит имя
+                пользователя и автора на которого он подписался.
+            Иначе:
+                Response: при успшной попытке отписки выводит сообщение о том
+                что пользователь отписался от автора.
+        """
+
         author = self.get_object()
         user = request.user
         serializer = SubscribeSerializer(data={'user': user.id, 'author': id})
@@ -133,6 +222,8 @@ class CustomUserViewSet(UserViewSet):
 
 
 class TagsViewSet(viewsets.ModelViewSet):
+    """ViewSet для работы с тегами."""
+
     pagination_class = None
     queryset = Tag.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
@@ -141,6 +232,8 @@ class TagsViewSet(viewsets.ModelViewSet):
 
 
 class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
+    """ViewSet для работы с ингредиентами."""
+
     pagination_class = None
     queryset = Ingredient.objects.all()
     permission_classes = (IsAdminOrReadOnly,)

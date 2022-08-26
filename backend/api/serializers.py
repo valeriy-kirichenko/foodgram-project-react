@@ -43,7 +43,7 @@ class CustomUserSerialaizer(UserSerializer):
 
 
 class SubscriptionRecipeSerializer(serializers.ModelSerializer):
-    """Сериалайзер для вывода списка рецептов пользователя на которого
+    """Сериализатор для вывода списка рецептов пользователя на которого
     подписан текущий пользователь.
     """
 
@@ -53,7 +53,7 @@ class SubscriptionRecipeSerializer(serializers.ModelSerializer):
 
 
 class SubscriptionsSerializer(CustomUserSerialaizer):
-    """Сериалайзер для вывода списка подписок текущего пользователя."""
+    """Сериализатор для вывода списка подписок текущего пользователя."""
 
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
@@ -103,7 +103,7 @@ class SubscriptionsSerializer(CustomUserSerialaizer):
 
 
 class SubscribeSerializer(serializers.ModelSerializer):
-    """Сериалайзер для работы с подписками(создание, удаление)."""
+    """Сериализатор для работы с подписками(создание, удаление)."""
 
     class Meta:
         model = Subscribe
@@ -111,7 +111,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    """Сериалайзер для вывода списка тегов."""
+    """Сериализатор для вывода списка тегов."""
 
     class Meta:
         model = Tag
@@ -119,7 +119,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    """Сериалайзер для вывода списка ингредиентов."""
+    """Сериализатор для вывода списка ингредиентов."""
 
     class Meta:
         model = Ingredient
@@ -127,7 +127,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
-    """Сериалайзер для вывода списка ингредиентов в рецепте."""
+    """Сериализатор для вывода списка ингредиентов в рецепте."""
 
     id = serializers.IntegerField(write_only=True)
     amount = serializers.IntegerField(write_only=True)
@@ -138,7 +138,7 @@ class IngredientRecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipeReadSerialaizer(serializers.ModelSerializer):
-    """Сериалайзер для вывода списка рецептов."""
+    """Сериализатор для вывода списка рецептов."""
 
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
@@ -226,7 +226,7 @@ class RecipeReadSerialaizer(serializers.ModelSerializer):
 
 
 class RecipeCreateSerialaizer(serializers.ModelSerializer):
-    """Сериалайзер для создания рецепта."""
+    """Сериализатор для создания рецепта."""
 
     ingredients = IngredientRecipeSerializer(many=True)
     image = Base64ImageField(max_length=None, use_url=True)
@@ -309,7 +309,7 @@ class RecipeCreateSerialaizer(serializers.ModelSerializer):
 
 
 class FavoriteShoppingCartRecipeSerializer(serializers.ModelSerializer):
-    """Сериалайзер для рецепта добавленного в избранное/список покупок."""
+    """Сериализатор для рецепта добавленного в избранное/список покупок."""
 
     image = Base64ImageField(max_length=None, use_url=True)
 
@@ -319,7 +319,7 @@ class FavoriteShoppingCartRecipeSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    """Сериалайзер для добавления рецепта в избранное."""
+    """Сериализатор для добавления рецепта в избранное."""
 
     class Meta:
         model = Favorite
@@ -342,7 +342,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
-    """Сериалайзер для добавления рецепта в список покупок."""
+    """Сериализатор для добавления рецепта в список покупок."""
 
     class Meta:
         model = ShoppingCart
