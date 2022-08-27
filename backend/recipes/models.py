@@ -1,9 +1,18 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from users.models import User
+from utils import COLOR_CHOICES
 
 
 class RecipeIngredient(models.Model):
+    """Модель для связи ингредиентов с рецептами.
+
+    Attributes:
+        recipe (int): id рецепта.
+        ingredient (int): id ингредиента.
+        amount (int): количество ингредиента в рецепте.
+    """
+
     recipe = models.ForeignKey(
         'Recipe',
         on_delete=models.CASCADE,
@@ -33,11 +42,20 @@ class RecipeIngredient(models.Model):
         verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
+        """Возвращает строковое представление модели"""
+
         return (f'{self.ingredient.name}: {self.amount},'
                 f' {self.ingredient.measurement_unit}')
 
 
 class Ingredient(models.Model):
+    """Модель для ингредиентов.
+
+    Attributes:
+        name (str): название ингредиента.
+        measurement_unit (str): единицы измерения.
+    """
+
     name = models.CharField('Название', max_length=200)
     measurement_unit = models.CharField('Единица измерения', max_length=200)
 
@@ -47,23 +65,20 @@ class Ingredient(models.Model):
         verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
+        """Возвращает строковое представление модели"""
+
         return self.name
 
 
 class Tag(models.Model):
-    BLUE = '#0000FF'
-    ORANGE = '#FFA500'
-    GREEN = '#008000'
-    PURPLE = '#800080'
-    YELLOW = '#FFFF00'
+    """Модель для тегов.
 
-    COLOR_CHOICES = [
-        (BLUE, 'Синий'),
-        (ORANGE, 'Оранжевый'),
-        (GREEN, 'Зеленый'),
-        (PURPLE, 'Фиолетовый'),
-        (YELLOW, 'Желтый'),
-    ]
+    Attributes:
+        name (str): название тега.
+        color (str): цвет окраски тега (HEX-код).
+        slug (str): уникальное название латиницей.
+    """
+
     name = models.CharField('Название', max_length=200, unique=True,)
     color = models.CharField(
         'Цветовой HEX-код', max_length=7, unique=True, choices=COLOR_CHOICES
@@ -79,10 +94,26 @@ class Tag(models.Model):
         verbose_name_plural = 'Теги'
 
     def __str__(self):
+        """Возвращает строковое представление модели"""
+
         return self.name
 
 
 class Recipe(models.Model):
+    """Модель для рецептов.
+
+    Attributes:
+        name (str): название рецепта.
+        text (str): текст рецепта.
+        image (str): изображение (путь до него).
+        cooking_time (int): время готовки.
+        pub_date (datetime): дата создания рецепта.
+        ingredients (int): ингредиенты (связь ManyToMany, через модель
+        RecipeIngredient).
+        tags (int): теги (связь ManyToMany).
+        author (int): id автора рецепта.
+    """
+
     name = models.CharField(
         'Название',
         max_length=200,
@@ -127,10 +158,19 @@ class Recipe(models.Model):
         verbose_name_plural = 'Рецепты'
 
     def __str__(self):
+        """Возвращает строковое представление модели"""
+
         return self.name
 
 
 class ShoppingCart(models.Model):
+    """Модель для списка покупок.
+
+    Attributes:
+        user (int): id пользователя.
+        recipe (int): id рецепта.
+    """
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -156,6 +196,13 @@ class ShoppingCart(models.Model):
 
 
 class Favorite(models.Model):
+    """Модель для избранного.
+
+    Attributes:
+        user (int): id пользователя.
+        recipe (int): id рецепта.
+    """
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
