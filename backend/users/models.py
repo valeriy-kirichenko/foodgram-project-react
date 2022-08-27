@@ -4,6 +4,19 @@ from django.db import models
 
 
 class User(AbstractUser):
+    """Модель для пользователей.
+
+        В качестве логина будет использоваться email, поля ('username',
+        'first_name', 'last_name') обязательны к заполнению.
+
+    Attributes:
+        username (str): имя пользователя.
+        password (str): пароль.
+        email (str): электронная почта.
+        first_name (str): имя.
+        last_name (str): фамилия.
+    """
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
     username = models.CharField(
@@ -34,10 +47,19 @@ class User(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
+        """Возвращает строковое представление модели"""
+
         return self.username
 
 
 class Subscribe(models.Model):
+    """Модель для хранения подписок.
+
+    Attributes:
+        user (int): id пользователя.
+        author (int): id автора рецепта.
+    """
+
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
@@ -62,9 +84,16 @@ class Subscribe(models.Model):
         )
 
     def clean(self):
+        """Проверяет подписку на самого себя.
+
+        Raises:
+            ValidationError: ошибка при попытке подписаться на самого себя.
+        """
+
         if self.user == self.author:
             raise ValidationError('Вы не можете подписаться на самого себя')
 
     def save(self, *args, **kwargs):
+        """Сохраняет модель, предварительно полностью проверив её."""
         self.full_clean()
         return super().save(*args, **kwargs)
